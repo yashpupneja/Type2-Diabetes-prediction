@@ -259,8 +259,85 @@ display_result(result)
 #pd.DataFrame(data={'Actual':test_y,'Predicted':y_pred}).head()
 
 
-# In[ ]:
+# In[ 25 ]:
+# Random Forest
+from sklearn.ensemble import RandomForestClassifier
+from sklearn import model_selection# random forest model creation
+rfc = RandomForestClassifier()
+rfc.fit(train_X,train_y)# predictions
+rfc_predict = rfc.predict(test_X)
+
+from sklearn.model_selection import cross_val_score
+from sklearn.metrics import classification_report, confusion_matrix
+
+rfc_cv_score = cross_val_score(rfc, X, y, cv=10)
+print("=== Confusion Matrix ===")
+print(confusion_matrix(test_y, rfc_predict))
+print('\n')
+print("=== Classification Report ===")
+print(classification_report(test_y, rfc_predict))
+print('\n')
+print("=== All AUC Scores ===")
+print(rfc_cv_score)
+print('\n')
+print("=== Mean AUC Score ===")
+print("Mean AUC Score - Random Forest: ", rfc_cv_score.mean())
+
+# Result:
+#=== Confusion Matrix ===
+#[[87  7]
+# [19 15]]
+
+
+#=== Classification Report ===
+ #             precision    recall  f1-score   support
+#
+ #          0       0.82      0.93      0.87        94
+ #          1       0.68      0.44      0.54        34
+
+  #  accuracy                           0.80       128
+  # macro avg       0.75      0.68      0.70       128
+#weighted avg       0.78      0.80      0.78       128
 
 
 
+#=== All AUC Scores ===
+#[0.765625   0.78125    0.734375   0.703125   0.734375   0.765625
+# 0.75       0.734375   0.765625   0.82539683]
+
+
+#=== Mean AUC Score ===
+#Mean AUC Score - Random Forest:  0.7559771825396825
+
+#In[26]:
+#NaiveBayes
+from sklearn.naive_bayes import GaussianNB
+
+#Create a Gaussian Classifier
+gnb = GaussianNB()
+
+#Train the model using the training sets
+gnb.fit(train_X, train_y)
+
+#Predict the response for test dataset
+y_pred = gnb.predict(test_X)
+
+#Import scikit-learn metrics module for accuracy calculation
+from sklearn import metrics
+
+# Model Accuracy, how often is the classifier correct?
+print("Accuracy:",metrics.accuracy_score(test_y, y_pred))
+
+#Result:
+#Accuracy: 0.8046875
+
+#In[27]:
+# Gradient Boosting Classifier
+from xgboost import XGBClassifier
+xgb_clf = XGBClassifier()
+xgb_clf.fit(train_X, train_y)
+score = xgb_clf.score(test_X, test_y)
+print(score)
+#Result:
+#0.7734375
 
